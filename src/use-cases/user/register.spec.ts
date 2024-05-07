@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
-import { UserAlreadyExistsError } from './errors/user-already-exists'
-import { UserRegisterUseCase } from './user-register'
+import { UserAlreadyExistsError } from '../errors/user/user-already-exists'
+import { UserRegisterUseCase } from './register'
 
 describe('Register Use Case', () => {
   let inMemoryUsersRepositoryUserRepository: InMemoryUsersRepository
