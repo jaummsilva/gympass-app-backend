@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
+import { User } from '@/domain/enterprise/user'
 
 import { InvalidCredentialsError } from '../../errors/auth/invalid-credentials-error'
 import { AuthenticateUseCase } from './authenticate'
@@ -25,18 +26,20 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should be able to authenticate', async () => {
-    await inMemoryUsersRepository.create({
-      name: 'teste',
-      email: 'teste@gmail.com',
-      password_hash: await hashGenerator.hash('TESTE123'),
-    })
+    await inMemoryUsersRepository.create(
+      User.create({
+        name: 'teste',
+        email: 'teste@gmail.com',
+        password_hash: await hashGenerator.hash('TESTE123'),
+      }),
+    )
 
     const { user } = await authenticateUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
     })
 
-    expect(user.id).toEqual(expect.any(String))
+    expect(user.id.toString()).toEqual(expect.any(String))
   })
 
   it('should not  be able to authenticate with wrong email', async () => {
@@ -49,11 +52,13 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not  be able to authenticate with wrong password', async () => {
-    await inMemoryUsersRepository.create({
-      name: 'teste',
-      email: 'teste5@gmail.com',
-      password_hash: await hashGenerator.hash('TESTE123'),
-    })
+    await inMemoryUsersRepository.create(
+      User.create({
+        name: 'teste',
+        email: 'teste5@gmail.com',
+        password_hash: await hashGenerator.hash('TESTE123'),
+      }),
+    )
 
     await expect(
       authenticateUseCase.execute({

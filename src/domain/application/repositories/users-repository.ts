@@ -1,6 +1,6 @@
-import { Prisma, User } from '@prisma/client'
+import type { User } from '@/domain/enterprise/user'
 
 export interface UsersRepository {
-  create(data: Prisma.UserCreateInput): Promise<User>
+  create(data: User): Promise<User>
   findByEmail(email: string): Promise<User | null> // Permitindo retorno nulo
 }

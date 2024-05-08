@@ -1,23 +1,13 @@
-import { Prisma, User } from '@prisma/client'
-
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
+import type { User } from '@/domain/enterprise/user'
 
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = []
 
-  async create(data: Prisma.UserCreateInput) {
-    const user = {
-      id: new UniqueEntityID().toString(),
-      name: data.name,
-      email: data.email,
-      password_hash: data.password_hash,
-      created_at: new Date(),
-    }
+  async create(data: User) {
+    this.items.push(data)
 
-    this.items.push(user)
-
-    return user
+    return data
   }
 
   async findByEmail(email: string) {

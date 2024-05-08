@@ -1,7 +1,6 @@
-import type { User } from '@prisma/client'
-
 import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
+import type { User } from '@/domain/enterprise/user'
 
 import { InvalidCredentialsError } from '../../errors/auth/invalid-credentials-error'
 

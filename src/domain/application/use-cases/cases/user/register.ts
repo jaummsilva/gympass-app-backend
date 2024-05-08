@@ -1,7 +1,6 @@
-import { User } from '@prisma/client'
-
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
+import { User } from '@/domain/enterprise/user'
 
 import { UserAlreadyExistsError } from '../../errors/user/user-already-exists'
 
@@ -34,11 +33,9 @@ export class UserRegisterUseCase {
       throw new UserAlreadyExistsError()
     }
 
-    const user = await this.usersRepository.create({
-      name,
-      email,
-      password_hash: passwordHash,
-    })
+    const user = User.create({ name, email, password_hash: passwordHash })
+
+    await this.usersRepository.create(user)
 
     return {
       user,
