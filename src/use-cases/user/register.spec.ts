@@ -6,17 +6,18 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { UserAlreadyExistsError } from '../errors/user/user-already-exists'
 import { UserRegisterUseCase } from './register'
 
+let inMemoryUsersRepositoryUserRepository: InMemoryUsersRepository
+let userRegisterUseCase: UserRegisterUseCase
+
 describe('Register Use Case', () => {
-  let inMemoryUsersRepositoryUserRepository: InMemoryUsersRepository
   beforeEach(() => {
     inMemoryUsersRepositoryUserRepository = new InMemoryUsersRepository()
+    userRegisterUseCase = new UserRegisterUseCase(
+      inMemoryUsersRepositoryUserRepository,
+    )
   })
 
   it('should be able to register', async () => {
-    const userRegisterUseCase = new UserRegisterUseCase(
-      inMemoryUsersRepositoryUserRepository,
-    )
-
     const { user } = await userRegisterUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
@@ -27,10 +28,6 @@ describe('Register Use Case', () => {
   })
 
   it('should hash user password upon registration', async () => {
-    const userRegisterUseCase = new UserRegisterUseCase(
-      inMemoryUsersRepositoryUserRepository,
-    )
-
     const { user } = await userRegisterUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
@@ -46,10 +43,6 @@ describe('Register Use Case', () => {
   })
 
   it('should not be able to register same email twice', async () => {
-    const userRegisterUseCase = new UserRegisterUseCase(
-      inMemoryUsersRepositoryUserRepository,
-    )
-
     await userRegisterUseCase.execute({
       email: 'teste.10@gmail.com',
       password: 'TESTE123',

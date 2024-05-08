@@ -6,16 +6,16 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { InvalidCredentialsError } from '../errors/auth/invalid-credentials-error'
 import { AuthenticateUseCase } from './authenticate'
 
-describe('Authenticate Use Case', () => {
-  let inMemoryUsersRepository: InMemoryUsersRepository // Removed duplicated 'UserRepository'
+let inMemoryUsersRepository: InMemoryUsersRepository
+let authenticateUseCase: AuthenticateUseCase
 
+describe('Authenticate Use Case', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository() // Fixed typo
+    authenticateUseCase = new AuthenticateUseCase(inMemoryUsersRepository) // Fixed typo
   })
 
   it('should be able to authenticate', async () => {
-    const authenticateUseCase = new AuthenticateUseCase(inMemoryUsersRepository)
-
     await inMemoryUsersRepository.create({
       name: 'teste',
       email: 'teste@gmail.com',
@@ -31,8 +31,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not  be able to authenticate with wrong email', async () => {
-    const authenticateUseCase = new AuthenticateUseCase(inMemoryUsersRepository)
-
     await expect(
       authenticateUseCase.execute({
         email: 'teste.1@gmail.com',
@@ -42,8 +40,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not  be able to authenticate with wrong password', async () => {
-    const authenticateUseCase = new AuthenticateUseCase(inMemoryUsersRepository)
-
     await inMemoryUsersRepository.create({
       name: 'teste',
       email: 'teste5@gmail.com',
