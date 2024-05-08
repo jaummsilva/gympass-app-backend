@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
-import { InvalidCredentialsError } from '../errors/auth/invalid-credentials-error'
+import { InvalidCredentialsError } from '../../errors/auth/invalid-credentials-error'
 import { AuthenticateUseCase } from './authenticate'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
