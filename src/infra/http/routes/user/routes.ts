@@ -7,6 +7,7 @@ export class UserRoutes {
   constructor(private httpServer: HttpServer) {}
 
   async init() {
+    const isPrivateRoute = true
     const zodUserRegisterBodySchemaValidation =
       new ZodUserRegisterBodySchemaValidation()
     const userController = new UserController(
@@ -18,6 +19,7 @@ export class UserRoutes {
       'post',
       '/user',
       userController.handle.bind(userController),
+      isPrivateRoute,
     )
   }
 }

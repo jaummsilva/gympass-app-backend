@@ -1,4 +1,5 @@
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
+import { type Either, left, right } from '@/core/either'
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
 import { User } from '@/domain/enterprise/user'
 
@@ -10,9 +11,10 @@ interface UserRegisterUseCaseRequest {
   email: string
 }
 
-interface UserRegisterUseCaseResponse {
-  user: User
-}
+type UserRegisterUseCaseResponse = Either<
+  UserAlreadyExistsError,
+  { user: User }
+>
 
 export class UserRegisterUseCase {
   constructor(
@@ -30,15 +32,13 @@ export class UserRegisterUseCase {
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
 
     if (userWithSameEmail) {
-      throw new UserAlreadyExistsError()
+      return left(new UserAlreadyExistsError())
     }
 
     const user = User.create({ name, email, password_hash: passwordHash })
 
     await this.usersRepository.create(user)
 
-    return {
-      user,
-    }
+    return right({ user })
   }
 }

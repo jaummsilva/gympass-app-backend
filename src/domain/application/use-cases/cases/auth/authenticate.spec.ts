@@ -4,9 +4,9 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
+import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import { User } from '@/domain/enterprise/user'
 
-import { InvalidCredentialsError } from '../../errors/auth/invalid-credentials-error'
 import { AuthenticateUseCase } from './authenticate'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
@@ -34,21 +34,25 @@ describe('Authenticate Use Case', () => {
       }),
     )
 
-    const { user } = await authenticateUseCase.execute({
+    const result = await authenticateUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
     })
 
-    expect(user.id.toString()).toEqual(expect.any(String))
+    expect(result.isRight() && result.value.user.id.toString()).toEqual(
+      expect.any(String),
+    )
   })
 
   it('should not  be able to authenticate with wrong email', async () => {
-    await expect(
-      authenticateUseCase.execute({
-        email: 'teste.1@gmail.com',
-        password: 'TESTE123',
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError)
+    const result = authenticateUseCase.execute({
+      email: 'teste.1@gmail.com',
+      password: 'TESTE123',
+    })
+
+    expect((await result).isLeft() && (await result).value).toBeInstanceOf(
+      InvalidCredentialsError,
+    )
   })
 
   it('should not  be able to authenticate with wrong password', async () => {
@@ -60,11 +64,13 @@ describe('Authenticate Use Case', () => {
       }),
     )
 
-    await expect(
-      authenticateUseCase.execute({
-        email: 'teste5@gmail.com',
-        password: 'TESTE123312',
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError)
+    const duplicateRegistrationResult = await authenticateUseCase.execute({
+      email: 'teste5@gmail.com',
+      password: 'TESTE123312',
+    })
+
+    expect(
+      duplicateRegistrationResult.isLeft() && duplicateRegistrationResult.value,
+    ).toBeInstanceOf(InvalidCredentialsError)
   })
 })

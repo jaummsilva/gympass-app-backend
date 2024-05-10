@@ -20,4 +20,12 @@ export class FastifyHttpRequestAdapter implements HttpRequest {
   get params(): { [key: string]: string } {
     return this.req.params as { [key: string]: string }
   }
+
+  get user(): { sub: string } {
+    return this.req.user
+  }
+
+  async jwtVerify(): Promise<void> {
+    await this.req.jwtVerify()
+  }
 }

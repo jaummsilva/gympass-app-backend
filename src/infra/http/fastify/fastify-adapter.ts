@@ -1,4 +1,5 @@
 import fastifyCors from '@fastify/cors'
+import fastifyJwt from '@fastify/jwt'
 import fastify, {
   type FastifyInstance,
   type FastifyReply,
@@ -6,6 +7,7 @@ import fastify, {
 } from 'fastify'
 
 import type { HttpMethods } from '@/core/types/http-methods.js'
+import { env } from '@/infra/env/index.js'
 
 import type { HttpRequest } from '../http-request.js'
 import type { HttpResponse } from '../http-response.js'
@@ -22,6 +24,13 @@ export class FastifyAdapter implements HttpServer {
 
   start(port: number, callback: () => void) {
     this.app.register(fastifyCors, {})
+
+    this.app.register(fastifyJwt, {
+      secret: env.JWT_SECRET,
+      sign: {
+        expiresIn: '1h',
+      },
+    })
 
     this.app.listen(
       {
@@ -43,6 +52,7 @@ export class FastifyAdapter implements HttpServer {
       request: HttpRequest,
       reply: HttpResponse,
     ) => Promise<HttpResponse>,
+    verifyJwt?: boolean,
   ) {
     this.app[method](
       url,
@@ -50,8 +60,32 @@ export class FastifyAdapter implements HttpServer {
         const wrappedRequest = new FastifyHttpRequestAdapter(request)
         const wrappedResponse = new FastifyHttpResponseAdapter(reply)
 
+        if (verifyJwt === true) {
+          const isJwtValid = await this.verifyJwt(wrappedRequest)
+
+          if (!isJwtValid) {
+            return wrappedResponse.status(401).json({ message: 'Unauthorized' })
+          }
+        }
+
         return await handler(wrappedRequest, wrappedResponse)
       },
     )
+  }
+
+  async verifyJwt(request: HttpRequest) {
+    try {
+      await request.jwtVerify()
+    } catch (error) {
+      return false
+    }
+
+    return true
+  }
+
+  signJwt(sub: string) {
+    return {
+      token: this.app.jwt.sign({ sub }),
+    }
   }
 }

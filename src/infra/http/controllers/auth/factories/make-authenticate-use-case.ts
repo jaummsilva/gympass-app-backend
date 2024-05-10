@@ -4,10 +4,10 @@ import { PrismaUsersRepository } from '@/infra/database/prisma/user/prisma-users
 
 export function makeAuthenticateUseCase() {
   const usersRepository = new PrismaUsersRepository()
-  const bcriptyAdapater = new BcryptAdapter()
+  const bcryptAdapater = new BcryptAdapter()
   const authenticateUsersCase = new AuthenticateUseCase(
     usersRepository,
-    bcriptyAdapater,
+    bcryptAdapater,
   )
 
   return authenticateUsersCase

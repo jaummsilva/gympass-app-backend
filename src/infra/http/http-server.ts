@@ -16,6 +16,9 @@ export interface HttpServer {
     handler: (
       request: HttpRequest,
       reply: HttpResponse,
-    ) => Promise<HttpResponse>,
+    ) => Promise<HttpResponse | undefined>,
+    verifyJwt?: boolean,
   ): void
+  verifyJwt(request: HttpRequest): Promise<boolean>
+  signJwt(sub: string): { token: string }
 }

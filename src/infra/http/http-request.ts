@@ -6,4 +6,8 @@ export interface HttpRequest {
   get params(): {
     [key: string]: string
   }
+  get user(): {
+    sub: string
+  }
+  jwtVerify(): Promise<void>
 }

@@ -25,28 +25,34 @@ describe('Register Use Case', () => {
   })
 
   it('should be able to register', async () => {
-    const { user } = await userRegisterUseCase.execute({
+    const result = await userRegisterUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
       name: 'João',
     })
 
-    expect(user.id.toString()).toEqual(expect.any(String))
+    if (result.isRight()) {
+      expect(result.value.user.id.toString()).toEqual(expect.any(String))
+    }
   })
 
   it('should hash user password upon registration', async () => {
-    const { user } = await userRegisterUseCase.execute({
+    const result = await userRegisterUseCase.execute({
       email: 'teste@gmail.com',
       password: 'TESTE123',
       name: 'João',
     })
 
-    const isPasswordCorrectlyHashed = await hashComparer.compare(
-      'TESTE123',
-      user.password_hash,
-    )
+    if (result.isRight()) {
+      const passwordHash = result.value.user.password_hash
 
-    expect(isPasswordCorrectlyHashed).toBe(true)
+      const isPasswordCorrectlyHashed = await hashComparer.compare(
+        'TESTE123',
+        passwordHash.toString(),
+      )
+
+      expect(isPasswordCorrectlyHashed).toBe(true)
+    }
   })
 
   it('should not be able to register same email twice', async () => {
@@ -56,12 +62,14 @@ describe('Register Use Case', () => {
       name: 'João',
     })
 
-    await expect(
-      userRegisterUseCase.execute({
-        email: 'teste.10@gmail.com',
-        password: 'TESTE123',
-        name: 'João',
-      }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
+    const duplicateRegistrationResult = await userRegisterUseCase.execute({
+      email: 'teste.10@gmail.com',
+      password: 'TESTE123',
+      name: 'João',
+    })
+
+    expect(
+      duplicateRegistrationResult.isLeft() && duplicateRegistrationResult.value,
+    ).toBeInstanceOf(UserAlreadyExistsError)
   })
 })

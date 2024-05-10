@@ -1,3 +1,5 @@
+import { fromError } from 'zod-validation-error'
+
 import type { Validation } from '@/core/validation/validation'
 import { UserAlreadyExistsError } from '@/domain/application/use-cases/errors/user/user-already-exists'
 
@@ -17,22 +19,36 @@ export class UserController {
   ) {}
 
   async handle(request: HttpRequest, reply: HttpResponse) {
-    const { name, email, password } = this.bodyValidation.validate(request.body)
-
     try {
+      const { name, email, password } = this.bodyValidation.validate(
+        request.body,
+      )
+
       const userRegisterUsersCase = makeRegisterUseCase()
 
-      await userRegisterUsersCase.execute({ name, email, password })
-    } catch (error) {
-      if (error instanceof UserAlreadyExistsError) {
-        return reply.status(409).json({
-          message: error.message,
-        })
+      const result = await userRegisterUsersCase.execute({
+        name,
+        email,
+        password,
+      })
+
+      if (result.isLeft()) {
+        const error = result.value
+
+        if (error instanceof UserAlreadyExistsError) {
+          return reply.status(409).json({
+            message: error.message,
+          })
+        }
       }
 
-      throw error
-    }
+      return reply.status(201).send()
+    } catch (error) {
+      const validationError = fromError(error)
 
-    return reply.status(201).send()
+      return reply.status(400).send().json({
+        message: validationError.toString(),
+      })
+    }
   }
 }

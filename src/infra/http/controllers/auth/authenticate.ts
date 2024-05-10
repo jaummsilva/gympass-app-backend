@@ -1,4 +1,6 @@
-import { InvalidCredentialsError } from '@/core/errors/auth/invalid-credentials-error'
+import { fromError } from 'zod-validation-error'
+
+import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import type { Validation } from '@/core/validation/validation'
 
 import type { HttpRequest } from '../../http-request'
@@ -16,22 +18,34 @@ export class AuthenticateController {
   ) {}
 
   async handle(request: HttpRequest, reply: HttpResponse) {
-    const { email, password } = this.bodyValidation.validate(request.body)
-
     try {
+      const { email, password } = this.bodyValidation.validate(request.body)
+
       const authenticateUsersCase = makeAuthenticateUseCase()
 
-      await authenticateUsersCase.execute({ email, password })
-    } catch (error) {
-      if (error instanceof InvalidCredentialsError) {
-        return reply.status(409).json({
-          message: error.message,
-        })
+      const result = await authenticateUsersCase.execute({ email, password })
+
+      if (result.isLeft()) {
+        const error = result.value
+
+        if (error instanceof InvalidCredentialsError) {
+          return reply.status(409).json({
+            message: error.message,
+          })
+        }
+      } else {
+        const { user } = result.value
+
+        const { token } = this.httpServer.signJwt(user.id.toString())
+
+        return reply.status(200).json({ token })
       }
+    } catch (error) {
+      const validationError = fromError(error)
 
-      throw error
+      return reply.status(400).json({
+        message: validationError.toString(),
+      })
     }
-
-    return reply.status(200).send()
   }
 }
