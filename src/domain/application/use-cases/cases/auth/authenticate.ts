@@ -1,18 +1,16 @@
 import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import { type Either, left, right } from '@/core/either'
-import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
 import type { User } from '@/domain/enterprise/user'
+
+import { UserNotExistsError } from '../../errors/user/user-not-exists'
 
 interface AuthenticateUseCaseRequest {
   email: string
   password: string
 }
 
-type AuthenticateUseCaseResponse = Either<
-  InvalidCredentialsError,
-  { user: User }
->
+type AuthenticateUseCaseResponse = Either<UserNotExistsError, { user: User }>
 
 export class AuthenticateUseCase {
   constructor(
@@ -27,7 +25,7 @@ export class AuthenticateUseCase {
     const user = await this.usersRepository.findByEmail(email)
 
     if (!user) {
-      return left(new InvalidCredentialsError())
+      return left(new UserNotExistsError())
     }
 
     const doesPasswordMatches = await this.hashCompare.compare(
@@ -36,7 +34,7 @@ export class AuthenticateUseCase {
     )
 
     if (!doesPasswordMatches) {
-      return left(new InvalidCredentialsError())
+      return left(new UserNotExistsError())
     }
 
     return right({ user })

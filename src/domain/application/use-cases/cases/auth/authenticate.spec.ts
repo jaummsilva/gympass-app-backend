@@ -7,6 +7,7 @@ import type { HashGenerator } from '@/core/cryptography/hash-generator'
 import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import { User } from '@/domain/enterprise/user'
 
+import { UserNotExistsError } from '../../errors/user/user-not-exists'
 import { AuthenticateUseCase } from './authenticate'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
@@ -51,7 +52,7 @@ describe('Authenticate Use Case', () => {
     })
 
     expect((await result).isLeft() && (await result).value).toBeInstanceOf(
-      InvalidCredentialsError,
+      UserNotExistsError,
     )
   })
 

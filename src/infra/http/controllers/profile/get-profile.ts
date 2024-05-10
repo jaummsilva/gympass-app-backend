@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import { makeGetProfileUseCase } from './factories/make-get-profile-use-case'
+import { ProfilePresenter } from './presenter/profile-presenter'
 
 export class ProfileController {
   async handle(request: HttpRequest, reply: HttpResponse) {
@@ -23,11 +24,7 @@ export class ProfileController {
         }
       } else {
         return reply.status(200).json({
-          user: {
-            name: result.value.user.name,
-            email: result.value.user.email,
-            created_at: result.value.user.created_at,
-          },
+          user: ProfilePresenter.toHttp(result.value.user),
         })
       }
     } catch (error) {

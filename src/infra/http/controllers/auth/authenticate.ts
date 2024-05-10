@@ -1,7 +1,7 @@
 import { fromError } from 'zod-validation-error'
 
-import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import type { Validation } from '@/core/validation/validation'
+import { UserNotExistsError } from '@/domain/application/use-cases/errors/user/user-not-exists'
 
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
@@ -28,7 +28,7 @@ export class AuthenticateController {
       if (result.isLeft()) {
         const error = result.value
 
-        if (error instanceof InvalidCredentialsError) {
+        if (error instanceof UserNotExistsError) {
           return reply.status(409).json({
             message: error.message,
           })
