@@ -4,6 +4,7 @@ import type { GymsRepository } from '@/domain/application/repositories/gyms-repo
 import type { UsersRepository } from '@/domain/application/repositories/users-repository'
 import { CheckIn } from '@/domain/enterprise/check-in'
 
+import { CheckInOnSameDateError } from '../../errors/check-in/check-in-on-same-date'
 import { GymNotExistsError } from '../../errors/gym/gym-not-exists'
 import { UserNotExistsError } from '../../errors/user/user-not-exists'
 
@@ -13,7 +14,7 @@ interface CheckInUseCaseRequest {
 }
 
 type CheckInUseCaseResponse = Either<
-  UserNotExistsError | GymNotExistsError,
+  UserNotExistsError | GymNotExistsError | CheckInOnSameDateError,
   { checkIn: CheckIn }
 >
 
@@ -38,6 +39,15 @@ export class CheckInUseCase {
 
     if (!gym) {
       return left(new GymNotExistsError())
+    }
+
+    const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(
+      userId,
+      new Date(),
+    )
+
+    if (checkInOnSameDate) {
+      return left(new CheckInOnSameDateError())
     }
 
     const checkIn = CheckIn.create({ gym_id: gymId, user_id: userId })

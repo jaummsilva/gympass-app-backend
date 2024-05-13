@@ -17,4 +17,27 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     })
     return PrismaCheckInMapper.toDomain(checkIn)
   }
+
+  async findByUserIdOnDate(userId: string, date: Date) {
+    const startOfTheDay = new Date(date)
+    startOfTheDay.setHours(0, 0, 0, 0)
+
+    const endOfTheDay = new Date(date)
+    endOfTheDay.setHours(23, 59, 59, 999)
+
+    const checkOnSameDate = await prisma.checkIn.findFirst({
+      where: {
+        user_id: userId,
+        created_at: {
+          gte: startOfTheDay,
+          lte: endOfTheDay,
+        },
+      },
+    })
+
+    if (!checkOnSameDate) {
+      return null
+    }
+    return PrismaCheckInMapper.toDomain(checkOnSameDate)
+  }
 }

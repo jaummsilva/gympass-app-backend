@@ -31,7 +31,7 @@ export class ProfileController {
       const validationError = fromError(error)
 
       return reply.status(400).json({
-        message: validationError.toString(),
+        message: validationError.details,
       })
     }
   }

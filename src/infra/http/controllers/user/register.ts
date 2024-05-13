@@ -45,7 +45,7 @@ export class UserController {
       const validationError = fromError(error)
 
       return reply.status(400).send().json({
-        message: validationError.toString(),
+        message: validationError.details,
       })
     }
   }
