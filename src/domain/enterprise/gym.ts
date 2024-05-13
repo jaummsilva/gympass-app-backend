@@ -1,5 +1,3 @@
-import type { Decimal } from '@prisma/client/runtime/library'
-
 import { Entity } from '@/core/entities/entity'
 import type { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
@@ -7,8 +5,8 @@ type GymProps = {
   title: string
   description?: string
   phone: string
-  latitude: Decimal
-  longitude: Decimal
+  latitude: number
+  longitude: number
 }
 
 export class Gym extends Entity<GymProps> {

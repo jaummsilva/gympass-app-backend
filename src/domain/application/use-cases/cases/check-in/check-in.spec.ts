@@ -1,6 +1,5 @@
 import { afterEach } from 'node:test'
 
-import { Decimal } from '@prisma/client/runtime/library'
 import { HashAdapter } from 'test/cryptography/hash-adapter'
 import { InMemoryCheckInsRepository } from 'test/repositories/in-memory/check-in/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from 'test/repositories/in-memory/gym/in-memory-gyms-repository'
@@ -51,8 +50,8 @@ describe('Check In Use Case', () => {
 
     const resultGym = await inMemoryGymsRepository.create(
       Gym.create({
-        latitude: new Decimal(1000),
-        longitude: new Decimal(1000),
+        latitude: -27.2092052,
+        longitude: -49.6401091,
         phone: '321321321',
         title: 'Teste',
       }),
@@ -63,6 +62,8 @@ describe('Check In Use Case', () => {
     const result = await checkInUseCase.execute({
       userId,
       gymId,
+      userLatitude: -27.2092052,
+      userLongitude: -49.6401091,
     })
 
     expect(result.isRight() && result.value.checkIn.id.toString()).toEqual(
@@ -84,8 +85,8 @@ describe('Check In Use Case', () => {
 
     const resultGym = await inMemoryGymsRepository.create(
       Gym.create({
-        latitude: new Decimal(1000),
-        longitude: new Decimal(1000),
+        latitude: -26.3134843,
+        longitude: -48.8527979,
         phone: '321321321',
         title: 'Teste',
       }),
@@ -96,11 +97,15 @@ describe('Check In Use Case', () => {
     await checkInUseCase.execute({
       userId,
       gymId,
+      userLatitude: -26.3134843,
+      userLongitude: -48.8527979,
     })
 
     const result = await checkInUseCase.execute({
       userId,
       gymId,
+      userLatitude: -26.3134843,
+      userLongitude: -48.8527979,
     })
 
     expect(result.isLeft()).toBeTruthy()
@@ -120,8 +125,8 @@ describe('Check In Use Case', () => {
 
     const resultGym = await inMemoryGymsRepository.create(
       Gym.create({
-        latitude: new Decimal(1000),
-        longitude: new Decimal(1000),
+        latitude: -26.3134843,
+        longitude: -48.8527979,
         phone: '321321321',
         title: 'Teste',
       }),
@@ -132,6 +137,8 @@ describe('Check In Use Case', () => {
     await checkInUseCase.execute({
       userId,
       gymId,
+      userLatitude: -26.3134843,
+      userLongitude: -48.8527979,
     })
 
     vi.setSystemTime(new Date(2022, 0, 11, 8, 0, 0))
@@ -139,10 +146,44 @@ describe('Check In Use Case', () => {
     const result = await checkInUseCase.execute({
       userId,
       gymId,
+      userLatitude: -26.3134843,
+      userLongitude: -48.8527979,
     })
 
     expect(result.isRight() && result.value.checkIn.id.toString()).toEqual(
       expect.any(String),
     )
+  })
+
+  it('should not be able to check in on distant gym', async () => {
+    const resultUser = await inMemoryUsersRepository.create(
+      User.create({
+        name: 'teste',
+        email: 'teste@gmail.com',
+        password_hash: await hashGenerator.hash('TESTE123'),
+      }),
+    )
+
+    const userId = resultUser.id.toString()
+
+    const resultGym = await inMemoryGymsRepository.create(
+      Gym.create({
+        latitude: -26.3134843,
+        longitude: -48.8527979,
+        phone: '321321321',
+        title: 'Teste',
+      }),
+    )
+
+    const gymId = resultGym.id.toString()
+
+    const result = await checkInUseCase.execute({
+      userId,
+      gymId,
+      userLatitude: -26.3122915,
+      userLongitude: -48.8550984,
+    })
+
+    expect(result.isLeft()).toBeTruthy()
   })
 })
