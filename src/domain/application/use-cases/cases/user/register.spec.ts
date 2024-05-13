@@ -13,7 +13,7 @@ let userRegisterUseCase: UserRegisterUseCase
 let hashComparer: HashComparer
 let hashGenerator: HashGenerator
 
-describe('Register Use Case', () => {
+describe('User Register Use Case', () => {
   beforeEach(() => {
     inMemoryUsersRepositoryUserRepository = new InMemoryUsersRepository()
     hashGenerator = new HashAdapter()
