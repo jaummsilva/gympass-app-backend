@@ -19,7 +19,7 @@ export class AuthenticateController {
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { email, password } = this.bodyValidation.validate(request.body)
+      const { email, password } = this.bodyValidation.parse(request.body)
 
       const authenticateUsersCase = makeAuthenticateUseCase()
 

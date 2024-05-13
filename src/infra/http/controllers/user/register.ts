@@ -20,9 +20,7 @@ export class UserController {
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { name, email, password } = this.bodyValidation.validate(
-        request.body,
-      )
+      const { name, email, password } = this.bodyValidation.parse(request.body)
 
       const userRegisterUsersCase = makeRegisterUseCase()
 

@@ -2,7 +2,7 @@ import type { UsersRepository } from '@/domain/application/repositories/users-re
 import type { User } from '@/domain/enterprise/user'
 import { prisma } from '@/infra/database/prisma/prisma'
 
-import { PrismaUserMapper } from '../mappers/prisma-user-mapper'
+import { PrismaUserMapper } from '../../mappers/prisma-user-mapper'
 
 export class PrismaUsersRepository implements UsersRepository {
   async create(data: User) {

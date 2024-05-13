@@ -12,7 +12,7 @@ export type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 export class ZodAuthenticateBodySchemaValidation
   implements Validation<AuthenticateBodySchema>
 {
-  validate(input: object | undefined) {
+  parse(input: object | undefined) {
     return authenticateBodySchema.parse(input)
   }
 }

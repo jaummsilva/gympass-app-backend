@@ -1,3 +1,3 @@
 export interface Validation<T> {
-  validate: (input: object | undefined) => T
+  parse: (input: object | undefined) => T
 }

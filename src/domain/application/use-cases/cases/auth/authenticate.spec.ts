@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
-import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import { User } from '@/domain/enterprise/user'
 
 import { UserNotExistsError } from '../../errors/user/user-not-exists'
@@ -72,6 +71,6 @@ describe('Authenticate Use Case', () => {
 
     expect(
       duplicateRegistrationResult.isLeft() && duplicateRegistrationResult.value,
-    ).toBeInstanceOf(InvalidCredentialsError)
+    ).toBeInstanceOf(UserNotExistsError)
   })
 })

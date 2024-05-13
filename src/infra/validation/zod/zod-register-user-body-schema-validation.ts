@@ -13,7 +13,7 @@ export type UserRegisterBodySchema = z.infer<typeof userRegisterBodySchema>
 export class ZodUserRegisterBodySchemaValidation
   implements Validation<UserRegisterBodySchema>
 {
-  validate(input: object | undefined) {
+  parse(input: object | undefined) {
     return userRegisterBodySchema.parse(input)
   }
 }
