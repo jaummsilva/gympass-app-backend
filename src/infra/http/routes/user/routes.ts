@@ -1,6 +1,7 @@
 import { ZodUserRegisterBodySchemaValidation } from '@/infra/validation/zod/zod-register-user-body-schema-validation'
 
 import { FecthUserCheckInsHistoryController } from '../../controllers/user/fetch-user-check-ins-historys'
+import { GetUserCheckInTotalController } from '../../controllers/user/get-user-check-in-total'
 import { UserController } from '../../controllers/user/register'
 import type { HttpServer } from '../../http-server'
 
@@ -20,7 +21,6 @@ export class UserRoutes {
       'post',
       '/user',
       userController.handle.bind(userController),
-      isPrivateRoute,
     )
 
     const fetchUserCheckInsHistoryController =
@@ -32,6 +32,17 @@ export class UserRoutes {
       fetchUserCheckInsHistoryController.handle.bind(
         fetchUserCheckInsHistoryController,
       ),
+      isPrivateRoute,
+    )
+
+    const getUserCheckInTotalController = new GetUserCheckInTotalController(
+      this.httpServer,
+    )
+
+    this.httpServer.register(
+      'get',
+      '/user/check-in-total',
+      getUserCheckInTotalController.handle.bind(getUserCheckInTotalController),
       isPrivateRoute,
     )
   }

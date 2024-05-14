@@ -72,4 +72,14 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
 
     return checkIns.map((checkIn) => PrismaCheckInMapper.toDomain(checkIn))
   }
+
+  async getCheckInTotalByUserId(userId: string) {
+    const total = await prisma.checkIn.count({
+      where: {
+        user_id: userId,
+      },
+    })
+
+    return { total }
+  }
 }
