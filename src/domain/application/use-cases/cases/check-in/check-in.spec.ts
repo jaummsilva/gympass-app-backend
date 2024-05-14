@@ -1,10 +1,8 @@
-import { afterEach } from 'node:test'
-
 import { HashAdapter } from 'test/cryptography/hash-adapter'
 import { InMemoryCheckInsRepository } from 'test/repositories/in-memory/check-in/in-memory-check-ins-repository'
 import { InMemoryGymsRepository } from 'test/repositories/in-memory/gym/in-memory-gyms-repository'
 import { InMemoryUsersRepository } from 'test/repositories/in-memory/user/in-memory-users-repository'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
 import { Gym } from '@/domain/enterprise/gym'

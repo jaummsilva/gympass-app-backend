@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs' // Adicionado este import
 
 import type { CheckInsRepository } from '@/domain/application/repositories/check-ins-repository'
 import type { CheckIn } from '@/domain/enterprise/check-in'
@@ -29,5 +29,15 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     }
 
     return checkOnSameDate
+  }
+
+  async findManyByUserId(userId: string) {
+    const gyms = this.items.filter((item) => item.user_id.toString() === userId)
+
+    if (gyms.length === 0) {
+      return null
+    }
+
+    return gyms
   }
 }

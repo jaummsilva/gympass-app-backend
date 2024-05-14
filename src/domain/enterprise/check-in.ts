@@ -1,11 +1,16 @@
 import { Entity } from '@/core/entities/entity'
 import type { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
+import type { Gym } from './gym'
+import type { User } from './user'
+
 type CheckInProps = {
   user_id: string
   gym_id: string
-  created_at?: Date
-  validated_at?: Date | null
+  created_at: Date
+  validated_at: Date | null
+  user: User
+  gym: Gym
 }
 
 export class CheckIn extends Entity<CheckInProps> {
@@ -38,5 +43,13 @@ export class CheckIn extends Entity<CheckInProps> {
 
   get validated_at() {
     return this.props.validated_at
+  }
+
+  get user(): User {
+    return this.props.user
+  }
+
+  get gym(): Gym {
+    return this.props.gym
   }
 }

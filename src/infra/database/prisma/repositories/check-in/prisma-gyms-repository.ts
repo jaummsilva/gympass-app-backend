@@ -14,6 +14,10 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
         user_id: data.user_id,
         validated_at: data.validated_at ? new Date() : null,
       },
+      include: {
+        gym: true,
+        user: true,
+      },
     })
     return PrismaCheckInMapper.toDomain(checkIn)
   }
@@ -33,11 +37,29 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
           lte: endOfTheDay,
         },
       },
+      include: {
+        gym: true,
+        user: true,
+      },
     })
 
     if (!checkOnSameDate) {
       return null
     }
     return PrismaCheckInMapper.toDomain(checkOnSameDate)
+  }
+
+  async findManyByUserId(userId: string): Promise<CheckIn[]> {
+    const checkIns = await prisma.checkIn.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        gym: true,
+        user: true,
+      },
+    })
+
+    return checkIns.map((checkIn) => PrismaCheckInMapper.toDomain(checkIn))
   }
 }
