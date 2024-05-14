@@ -12,7 +12,7 @@ export class PrismaGymMapper {
         longitude: PrismaGymMapper.toNumber(raw.longitude),
         phone: raw.phone,
         title: raw.title,
-        description: raw.description ?? '',
+        description: raw.description ?? null,
       },
       new UniqueEntityID(raw.id),
     )

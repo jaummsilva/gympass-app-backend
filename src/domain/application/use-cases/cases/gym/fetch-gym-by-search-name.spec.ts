@@ -1,18 +1,18 @@
 import { InMemoryGymsRepository } from 'test/repositories/in-memory/gym/in-memory-gyms-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { FetchGymBySearchUseCase } from './fetch-gym-by-search-name'
+import { FetchGymBySearchNameUseCase } from './fetch-gym-by-search-name'
 import { GymRegisterUseCase } from './register'
 
 let inMemoryGymsRepository: InMemoryGymsRepository
 let gymRegisterUseCase: GymRegisterUseCase
-let fetchGymBySearchNameUseCase: FetchGymBySearchUseCase
+let fetchGymBySearchNameUseCase: FetchGymBySearchNameUseCase
 
 describe('Fetch Gym By Search Name Use Case', () => {
   beforeEach(() => {
     inMemoryGymsRepository = new InMemoryGymsRepository()
     gymRegisterUseCase = new GymRegisterUseCase(inMemoryGymsRepository)
-    fetchGymBySearchNameUseCase = new FetchGymBySearchUseCase(
+    fetchGymBySearchNameUseCase = new FetchGymBySearchNameUseCase(
       inMemoryGymsRepository,
     )
   })

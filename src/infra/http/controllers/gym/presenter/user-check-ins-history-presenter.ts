@@ -4,7 +4,7 @@ export class FetchGymBySearchNamePresenter {
   static toHttp(gym: Gym): {
     id: string
     title: string
-    description?: string
+    description?: string | null
     phone: string
     latitude: number
     longitude: number
@@ -14,7 +14,7 @@ export class FetchGymBySearchNamePresenter {
       latitude: gym.latitude,
       longitude: gym.longitude,
       phone: gym.phone,
-      description: gym.description,
+      description: gym.description ?? null,
       title: gym.title,
     }
   }

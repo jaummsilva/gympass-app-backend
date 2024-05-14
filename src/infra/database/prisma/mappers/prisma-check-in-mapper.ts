@@ -31,7 +31,7 @@ export class PrismaCheckInMapper {
         gym: DomainGym.create(
           {
             title: raw.gym.title,
-            description: raw.gym.description ?? '',
+            description: raw.gym.description ?? null,
             phone: raw.gym.phone,
             latitude: raw.gym.latitude.toNumber(),
             longitude: raw.gym.longitude.toNumber(),

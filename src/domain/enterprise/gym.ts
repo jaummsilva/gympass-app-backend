@@ -3,7 +3,7 @@ import type { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 type GymProps = {
   title: string
-  description?: string
+  description?: string | null
   phone: string
   latitude: number
   longitude: number
