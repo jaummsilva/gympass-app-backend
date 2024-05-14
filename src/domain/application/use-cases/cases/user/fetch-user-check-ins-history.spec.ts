@@ -84,6 +84,7 @@ describe('Fecth User Check Ins History In Use Case', () => {
       userId,
       page: 1,
     })
+
     expect(result.isRight() && result.value.checkIns.length).toBeGreaterThan(0)
   })
 })

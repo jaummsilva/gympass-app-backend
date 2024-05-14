@@ -54,7 +54,7 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     let take
 
     if (page !== undefined && page > 0) {
-      take = 10 // Defina o tamanho da página conforme necessário
+      take = 20
       skip = (page - 1) * take
     }
 

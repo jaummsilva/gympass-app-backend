@@ -19,4 +19,16 @@ export class InMemoryGymsRepository implements GymsRepository {
 
     return gym
   }
+
+  async findManyBySearchName(name: string, page: number) {
+    const gyms = this.items
+      .filter((item) => item.title.includes(name))
+      .slice((page - 1) * 20, page * 20)
+
+    if (gyms.length === 0) {
+      return null
+    }
+
+    return gyms
+  }
 }

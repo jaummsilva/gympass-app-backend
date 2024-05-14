@@ -5,39 +5,41 @@ import type { Validation } from '@/core/validation/validation'
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import type { HttpServer } from '../../http-server'
-import { makeFetchUserCheckInsHistoryUseCase } from './factories/make-fetch-user-check-ins-history-use-case'
-import { UserCheckInsHistoryPresenter } from './presenter/user-check-ins-history-presenter'
+import { makeFetchGymBySearchNameUseCase } from './factories/make-fetch-gym-by-search-name-use-case'
+import { FetchGymBySearchNamePresenter } from './presenter/user-check-ins-history-presenter'
 
-export class FecthUserCheckInsHistoryController {
+export class FecthGymBySearchNameController {
   constructor(
     private httpServer: HttpServer,
     private bodyValidation: Validation<{
+      name: string
       page?: number
     }>,
   ) {}
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { page } = this.bodyValidation.parse(request.query)
-      const fecthUserCheckInsHistoryCase = makeFetchUserCheckInsHistoryUseCase()
+      const { name, page } = this.bodyValidation.parse(request.query)
 
-      const result = await fecthUserCheckInsHistoryCase.execute({
-        userId: request.user.sub,
+      const fecthGymBySearchNameCase = makeFetchGymBySearchNameUseCase()
+
+      const result = await fecthGymBySearchNameCase.execute({
+        name,
         page: page || 0,
       })
 
       if (result.isLeft()) {
         return reply.status(409).json({
-          checkIns: [],
+          gyms: [],
         })
       }
 
       if (result.isRight()) {
-        const { checkIns } = result.value
+        const { gyms } = result.value
 
         return reply.status(200).json({
-          checkIns: checkIns.map((checkIn) => ({
-            ...UserCheckInsHistoryPresenter.toHttp(checkIn),
+          gyms: gyms.map((checkIn) => ({
+            ...FetchGymBySearchNamePresenter.toHttp(checkIn),
           })),
         })
       }

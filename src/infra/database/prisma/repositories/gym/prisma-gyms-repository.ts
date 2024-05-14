@@ -29,4 +29,31 @@ export class PrismaGymsRepository implements GymsRepository {
     })
     return PrismaGymMapper.toDomain(gym)
   }
+
+  async findManyBySearchName(name: string, page: number) {
+    let skip = 0
+    let take
+
+    if (page !== undefined && page > 0) {
+      take = 20
+      skip = (page - 1) * take
+    }
+
+    const gyms = await prisma.gym.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: name.toLowerCase(),
+              mode: 'insensitive', // Para fazer a comparação sem diferenciar maiúsculas de minúsculas
+            },
+          },
+        ],
+      },
+      skip,
+      take,
+    })
+
+    return gyms.map((gym) => PrismaGymMapper.toDomain(gym))
+  }
 }

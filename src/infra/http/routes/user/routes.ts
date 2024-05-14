@@ -1,3 +1,4 @@
+import { ZodFetchUserCheckInsHistoryQuerySchemaValidation } from '@/infra/validation/zod/zod-fetch-user-check-ins-history-query-schema-validation.ts'
 import { ZodUserRegisterBodySchemaValidation } from '@/infra/validation/zod/zod-register-user-body-schema-validation'
 
 import { FecthUserCheckInsHistoryController } from '../../controllers/user/fetch-user-check-ins-historys'
@@ -23,8 +24,13 @@ export class UserRoutes {
       userController.handle.bind(userController),
     )
 
+    const zodFetchUserCheckInsHistoryQuerySchemaSchemaValidation =
+      new ZodFetchUserCheckInsHistoryQuerySchemaValidation()
     const fetchUserCheckInsHistoryController =
-      new FecthUserCheckInsHistoryController(this.httpServer)
+      new FecthUserCheckInsHistoryController(
+        this.httpServer,
+        zodFetchUserCheckInsHistoryQuerySchemaSchemaValidation,
+      )
 
     this.httpServer.register(
       'get',
