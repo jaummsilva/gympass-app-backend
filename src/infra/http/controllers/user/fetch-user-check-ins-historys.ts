@@ -1,7 +1,5 @@
 import { fromError } from 'zod-validation-error'
 
-import { UserHasNotPerfomedCheckInError } from '@/domain/application/use-cases/errors/user/user-not-check-ins-reached'
-
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import type { HttpServer } from '../../http-server'
@@ -17,16 +15,13 @@ export class FecthUserCheckInsHistoryController {
 
       const result = await fecthUserCheckInsHistoryCase.execute({
         userId: request.user.sub,
+        page: parseInt(request.query.page as string) || 0, // Usando parseInt para converter para número
       })
 
       if (result.isLeft()) {
-        const error = result.value
-
-        if (error instanceof UserHasNotPerfomedCheckInError) {
-          return reply.status(409).json({
-            message: error.message,
-          })
-        }
+        return reply.status(200).json({
+          checkIns: [],
+        })
       }
 
       if (result.isRight()) {

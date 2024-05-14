@@ -31,8 +31,10 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkOnSameDate
   }
 
-  async findManyByUserId(userId: string) {
-    const gyms = this.items.filter((item) => item.user_id.toString() === userId)
+  async findManyByUserId(userId: string, page: number) {
+    const gyms = this.items
+      .filter((item) => item.user_id.toString() === userId)
+      .slice((page - 1) * 20, page * 20)
 
     if (gyms.length === 0) {
       return null

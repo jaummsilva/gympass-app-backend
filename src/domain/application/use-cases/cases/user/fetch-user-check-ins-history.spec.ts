@@ -62,6 +62,8 @@ describe('Fecth User Check Ins History In Use Case', () => {
         gym_id: gymId,
         created_at: new Date(),
         validated_at: null,
+        gym: resultGym,
+        user: resultUser,
       }),
     )
 
@@ -73,11 +75,14 @@ describe('Fecth User Check Ins History In Use Case', () => {
         gym_id: gymId,
         created_at: new Date(),
         validated_at: null,
+        gym: resultGym,
+        user: resultUser,
       }),
     )
 
     const result = await fetchUserCheckInsHistoryUseCase.execute({
       userId,
+      page: 1,
     })
     expect(result.isRight() && result.value.checkIns.length).toBeGreaterThan(0)
   })

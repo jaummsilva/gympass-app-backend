@@ -6,6 +6,7 @@ import { UserHasNotPerfomedCheckInError } from '../../errors/user/user-not-check
 
 interface FetchUserCheckInsHistoryUseCaseRequest {
   userId: string
+  page?: number | 0
 }
 
 type FetchUserCheckInsHistoryUseCaseResponse = Either<
@@ -18,8 +19,12 @@ export class FetchUserCheckInsHistoryUseCase {
 
   async execute({
     userId,
+    page,
   }: FetchUserCheckInsHistoryUseCaseRequest): Promise<FetchUserCheckInsHistoryUseCaseResponse> {
-    const checkIns = await this.checkInsRepository.findManyByUserId(userId)
+    const checkIns = await this.checkInsRepository.findManyByUserId(
+      userId,
+      page || 0,
+    )
 
     if (!checkIns || checkIns.length === 0) {
       return left(new UserHasNotPerfomedCheckInError())

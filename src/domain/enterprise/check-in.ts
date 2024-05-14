@@ -23,7 +23,6 @@ export class CheckIn extends Entity<CheckInProps> {
       {
         ...props,
         created_at: props.created_at ?? new Date(),
-        validated_at: props.created_at ? new Date() : null,
       },
       id,
     )

@@ -18,7 +18,7 @@ export class PrismaCheckInMapper {
         gym_id: raw.gym_id,
         user_id: raw.user_id,
         created_at: raw.created_at,
-        validated_at: raw.validated_at ?? null,
+        validated_at: raw.validated_at,
         user: DomainUser.create(
           {
             email: raw.user.email,
@@ -49,7 +49,7 @@ export class PrismaCheckInMapper {
       gym_id: checkIn.gym_id,
       user_id: checkIn.user_id,
       created_at: checkIn.created_at ?? new Date(),
-      validated_at: checkIn.validated_at ?? null,
+      validated_at: checkIn.validated_at,
     }
   }
 }

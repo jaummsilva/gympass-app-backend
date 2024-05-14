@@ -73,7 +73,12 @@ export class CheckInUseCase {
       return left(new CheckInOnSameDateError())
     }
 
-    const checkIn = CheckIn.create({ gym_id: gymId, user_id: userId })
+    const checkIn = CheckIn.create({
+      gym_id: gymId,
+      user_id: userId,
+      validated_at: null,
+      created_at: new Date(),
+    })
 
     await this.checkInsRepository.create(checkIn)
 

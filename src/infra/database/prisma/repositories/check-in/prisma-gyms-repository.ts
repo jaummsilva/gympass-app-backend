@@ -12,7 +12,7 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
         created_at: data.created_at ?? new Date(),
         gym_id: data.gym_id,
         user_id: data.user_id,
-        validated_at: data.validated_at ? new Date() : null,
+        validated_at: data.validated_at,
       },
       include: {
         gym: true,
@@ -49,7 +49,15 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     return PrismaCheckInMapper.toDomain(checkOnSameDate)
   }
 
-  async findManyByUserId(userId: string): Promise<CheckIn[]> {
+  async findManyByUserId(userId: string, page?: number): Promise<CheckIn[]> {
+    let skip = 0
+    let take
+
+    if (page !== undefined && page > 0) {
+      take = 10 // Defina o tamanho da página conforme necessário
+      skip = (page - 1) * take
+    }
+
     const checkIns = await prisma.checkIn.findMany({
       where: {
         user_id: userId,
@@ -58,6 +66,8 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
         gym: true,
         user: true,
       },
+      skip,
+      take,
     })
 
     return checkIns.map((checkIn) => PrismaCheckInMapper.toDomain(checkIn))

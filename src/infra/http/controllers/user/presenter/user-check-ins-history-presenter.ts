@@ -9,7 +9,7 @@ export class UserCheckInsHistoryPresenter {
     return {
       gym_title: checkIn.gym.title,
       created_at: checkIn.created_at,
-      validated_at: checkIn.validated_at ?? null,
+      validated_at: checkIn.validated_at,
     }
   }
 }
