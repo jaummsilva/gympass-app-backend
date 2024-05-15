@@ -1,5 +1,5 @@
 import { CheckInUseCase } from '@/domain/application/use-cases/cases/check-in/check-in'
-import { PrismaCheckInsRepository } from '@/infra/database/prisma/repositories/check-in/prisma-gyms-repository'
+import { PrismaCheckInsRepository } from '@/infra/database/prisma/repositories/check-in/prisma-check-ins-repository'
 import { PrismaGymsRepository } from '@/infra/database/prisma/repositories/gym/prisma-gyms-repository'
 import { PrismaUsersRepository } from '@/infra/database/prisma/repositories/user/prisma-users-repository'
 
