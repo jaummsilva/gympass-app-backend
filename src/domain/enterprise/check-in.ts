@@ -51,4 +51,16 @@ export class CheckIn extends Entity<CheckInProps> {
   get gym(): Gym {
     return this.props.gym
   }
+
+  set validated_at(value: Date | null) {
+    this.props.validated_at = value
+  }
+
+  set gym_id(value: string) {
+    this.props.gym_id = value
+  }
+
+  set user_id(value: string) {
+    this.props.user_id = value
+  }
 }

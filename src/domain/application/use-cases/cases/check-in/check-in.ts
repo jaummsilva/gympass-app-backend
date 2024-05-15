@@ -78,6 +78,8 @@ export class CheckInUseCase {
       user_id: userId,
       validated_at: null,
       created_at: new Date(),
+      user,
+      gym,
     })
 
     await this.checkInsRepository.create(checkIn)

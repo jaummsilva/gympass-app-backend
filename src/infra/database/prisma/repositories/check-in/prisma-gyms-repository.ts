@@ -82,4 +82,52 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
 
     return { total }
   }
+
+  async findById(checkInId: string) {
+    const checkIn = await prisma.checkIn.findUnique({
+      where: {
+        id: checkInId,
+      },
+      include: {
+        gym: true,
+        user: true,
+      },
+    })
+
+    if (!checkIn) {
+      return null
+    }
+
+    return PrismaCheckInMapper.toDomain(checkIn)
+  }
+
+  async save(checkIn: CheckIn) {
+    const { id, gym_id, user_id, validated_at } = checkIn
+
+    const existingCheckIn = await prisma.checkIn.findUnique({
+      where: {
+        id: id.toString(),
+      },
+    })
+
+    if (existingCheckIn) {
+      const updatedCheckIn = await prisma.checkIn.update({
+        where: {
+          id: id.toString(),
+        },
+        data: {
+          gym_id,
+          user_id,
+          validated_at,
+        },
+        include: {
+          gym: true,
+          user: true,
+        },
+      })
+      return PrismaCheckInMapper.toDomain(updatedCheckIn)
+    } else {
+      return checkIn
+    }
+  }
 }

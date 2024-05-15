@@ -9,7 +9,7 @@ import { UserNotExistsError } from '@/domain/application/use-cases/errors/user/u
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import type { HttpServer } from '../../http-server'
-import { makeCheckInUseCase } from './factories/make-authenticate-use-case'
+import { makeCheckInUseCase } from './factories/make-check-in-use-case'
 
 export class CheckInController {
   constructor(
