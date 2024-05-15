@@ -1,4 +1,8 @@
-import type { GymsRepository } from '@/domain/application/repositories/gyms-repository'
+import type {
+  FindManyNearbyParams,
+  GymsRepository,
+} from '@/domain/application/repositories/gyms-repository'
+import { getDistanceBetweenCoordinates } from '@/domain/application/utils/get-distance-between-coordinates'
 import type { Gym } from '@/domain/enterprise/gym'
 
 export class InMemoryGymsRepository implements GymsRepository {
@@ -24,6 +28,26 @@ export class InMemoryGymsRepository implements GymsRepository {
     const gyms = this.items
       .filter((item) => item.title.includes(name))
       .slice((page - 1) * 20, page * 20)
+
+    if (gyms.length === 0) {
+      return null
+    }
+
+    return gyms
+  }
+
+  async findManyNearby(params: FindManyNearbyParams) {
+    const gyms = this.items.filter((item) => {
+      const distance = getDistanceBetweenCoordinates(
+        {
+          latitude: params.latitude,
+          longitude: params.longitude,
+        },
+        { latitude: item.latitude, longitude: item.longitude },
+      )
+
+      return distance < 10
+    })
 
     if (gyms.length === 0) {
       return null

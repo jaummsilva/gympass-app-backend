@@ -5,27 +5,29 @@ import type { Validation } from '@/core/validation/validation'
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import type { HttpServer } from '../../http-server'
-import { makeFetchGymBySearchNameUseCase } from './factories/make-fetch-gym-by-search-name-use-case'
+import { makeFetchNearbyGymsUseCase } from './factories/make-fetch-nearby-gyms-use-case'
 import { GymPresenter } from './presenter/gym-presenter'
 
-export class FecthGymBySearchNameController {
+export class FecthNearbyGymsController {
   constructor(
     private httpServer: HttpServer,
     private bodyValidation: Validation<{
-      name: string
-      page?: number
+      userLatitude: number
+      userLongitude: number
     }>,
   ) {}
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { name, page } = this.bodyValidation.parse(request.query)
+      const { userLatitude, userLongitude } = this.bodyValidation.parse(
+        request.query,
+      )
 
-      const fecthGymBySearchNameCase = makeFetchGymBySearchNameUseCase()
+      const fecthNearbyGymsCase = makeFetchNearbyGymsUseCase()
 
-      const result = await fecthGymBySearchNameCase.execute({
-        name,
-        page: page || 0,
+      const result = await fecthNearbyGymsCase.execute({
+        userLatitude,
+        userLongitude,
       })
 
       if (result.isLeft()) {

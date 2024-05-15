@@ -1,7 +1,9 @@
-import { ZodFetchGymBySearchNameQuerySchemaValidation } from '@/infra/validation/zod/zod-fetch-gym-by-search-name-query-schema-validation.ts'
+import { ZodFetchGymBySearchNameQuerySchemaValidation } from '@/infra/validation/zod/zod-fetch-gym-by-search-name-query-schema-validation'
+import { ZodFetchNearbyGymsQuerySchemaValidation } from '@/infra/validation/zod/zod-fetch-nearby-gyms-schema-validation'
 import { ZodGymRegisterBodySchemaValidation } from '@/infra/validation/zod/zod-register-gym-body-schema-validation'
 
 import { FecthGymBySearchNameController } from '../../controllers/gym/fetch-gym-by-search-name'
+import { FecthNearbyGymsController } from '../../controllers/gym/fetch-nearby-gyms'
 import { GymController } from '../../controllers/gym/register'
 import type { HttpServer } from '../../http-server'
 
@@ -37,6 +39,20 @@ export class GymRoutes {
       fetchGymBySearchNameController.handle.bind(
         fetchGymBySearchNameController,
       ),
+      isPrivateRoute,
+    )
+
+    const zodFetchNearbyGymsQuerySchemaValidation =
+      new ZodFetchNearbyGymsQuerySchemaValidation()
+    const fetchGymNearbyGymsController = new FecthNearbyGymsController(
+      this.httpServer,
+      zodFetchNearbyGymsQuerySchemaValidation,
+    )
+
+    this.httpServer.register(
+      'get',
+      '/gym/nearby',
+      fetchGymNearbyGymsController.handle.bind(fetchGymNearbyGymsController),
       isPrivateRoute,
     )
   }

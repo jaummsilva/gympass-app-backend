@@ -1,6 +1,6 @@
 import type { Gym } from '@/domain/enterprise/gym'
 
-export class FetchGymBySearchNamePresenter {
+export class GymPresenter {
   static toHttp(gym: Gym): {
     id: string
     title: string

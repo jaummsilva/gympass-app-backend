@@ -1,4 +1,7 @@
-import type { GymsRepository } from '@/domain/application/repositories/gyms-repository'
+import type {
+  FindManyNearbyParams,
+  GymsRepository,
+} from '@/domain/application/repositories/gyms-repository'
 import type { Gym } from '@/domain/enterprise/gym'
 import { prisma } from '@/infra/database/prisma/prisma'
 
@@ -52,6 +55,32 @@ export class PrismaGymsRepository implements GymsRepository {
       },
       skip,
       take,
+    })
+
+    return gyms.map((gym) => PrismaGymMapper.toDomain(gym))
+  }
+
+  async findManyNearby(params: FindManyNearbyParams) {
+    const latOffset = 0.09 / 111 // 1 degree latitude ≈ 111 kilometers
+    const lonOffset = 0.09 / (111 * Math.cos(params.latitude * (Math.PI / 180))) // 1 degree longitude ≈ 111 km * cos(latitude)
+
+    const gyms = await prisma.gym.findMany({
+      where: {
+        AND: [
+          {
+            latitude: {
+              gte: params.latitude - latOffset,
+              lte: params.latitude + latOffset,
+            },
+          },
+          {
+            longitude: {
+              gte: params.longitude - lonOffset,
+              lte: params.longitude + lonOffset,
+            },
+          },
+        ],
+      },
     })
 
     return gyms.map((gym) => PrismaGymMapper.toDomain(gym))
