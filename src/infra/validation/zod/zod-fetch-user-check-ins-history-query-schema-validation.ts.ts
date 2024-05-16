@@ -3,7 +3,7 @@ import { z } from 'zod'
 import type { Validation } from '@/core/validation/validation'
 
 const fetchUserCheckInsHistoryQuerySchema = z.object({
-  page: z.string().transform((val) => (val ? parseInt(val) : undefined)),
+  page: z.coerce.number().min(1).default(1),
 })
 
 export type FetchUserCheckInsHistoryQuerySchema = z.infer<
