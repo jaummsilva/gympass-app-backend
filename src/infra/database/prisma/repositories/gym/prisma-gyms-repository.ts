@@ -48,7 +48,7 @@ export class PrismaGymsRepository implements GymsRepository {
           {
             title: {
               contains: name.toLowerCase(),
-              mode: 'insensitive', // Para fazer a comparação sem diferenciar maiúsculas de minúsculas
+              mode: 'insensitive',
             },
           },
         ],
@@ -61,8 +61,8 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   async findManyNearby(params: FindManyNearbyParams) {
-    const latOffset = 0.09 / 111 // 1 degree latitude ≈ 111 kilometers
-    const lonOffset = 0.09 / (111 * Math.cos(params.latitude * (Math.PI / 180))) // 1 degree longitude ≈ 111 km * cos(latitude)
+    const latOffset = 0.09 / 111
+    const lonOffset = 0.09 / (111 * Math.cos(params.latitude * (Math.PI / 180)))
 
     const gyms = await prisma.gym.findMany({
       where: {

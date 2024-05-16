@@ -30,12 +30,6 @@ export class FecthNearbyGymsController {
         userLongitude,
       })
 
-      if (result.isLeft()) {
-        return reply.status(409).json({
-          gyms: [],
-        })
-      }
-
       if (result.isRight()) {
         const { gyms } = result.value
 
