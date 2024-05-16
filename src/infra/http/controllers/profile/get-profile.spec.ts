@@ -5,6 +5,7 @@ import { app } from '@/main'
 
 import { FastifyAdapter } from '../../fastify/fastify-adapter'
 import type { HttpServer } from '../../http-server'
+import { createAndAuthenticateUser } from '../../utils/test/create-and-authenticate-user'
 
 let httpServer: HttpServer
 
@@ -18,20 +19,7 @@ describe('Get Profile (e2e)', () => {
   })
 
   it('should get user profile', async () => {
-    await request(app.instance.server).post('/user').send({
-      name: 'TESTE USER',
-      email: 'teste@gmail.com',
-      password: '123456',
-    })
-
-    const authResponse = await request(app.instance.server)
-      .post('/session')
-      .send({
-        email: 'teste@gmail.com',
-        password: '123456',
-      })
-
-    const { token } = authResponse.body
+    const token = await createAndAuthenticateUser(app)
 
     const result = await request(app.instance.server)
       .get('/profile')

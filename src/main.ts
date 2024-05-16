@@ -7,7 +7,7 @@ import { GymRoutes } from './infra/http/routes/gym/routes'
 import { ProfileRoutes } from './infra/http/routes/profile/routes'
 import { UserRoutes } from './infra/http/routes/user/routes'
 
-class App {
+export default class App {
   private httpServer: HttpServer
   constructor() {
     this.httpServer = new FastifyAdapter()
