@@ -3,8 +3,12 @@ import { z } from 'zod'
 import type { Validation } from '@/core/validation/validation'
 
 const gymRegisterBodySchema = z.object({
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().refine((value) => {
+    return Math.abs(value) <= 90
+  }),
+  longitude: z.number().refine((value) => {
+    return Math.abs(value) <= 180
+  }),
   phone: z.string(),
   description: z.string().nullable(),
   title: z.string(),

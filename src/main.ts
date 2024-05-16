@@ -28,8 +28,12 @@ class App {
   async close() {
     this.httpServer.close()
   }
+
+  get instance() {
+    return this.httpServer.app
+  }
 }
 
-const app = new App()
+export const app = new App()
 
 app.start()
