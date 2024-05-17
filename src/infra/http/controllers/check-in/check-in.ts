@@ -15,7 +15,6 @@ export class CheckInController {
   constructor(
     private httpServer: HttpServer,
     private bodyValidation: Validation<{
-      userId: string
       gymId: string
       userLatitude: number
       userLongitude: number
@@ -24,8 +23,11 @@ export class CheckInController {
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { userId, gymId, userLatitude, userLongitude } =
-        this.bodyValidation.parse(request.body)
+      const { gymId, userLatitude, userLongitude } = this.bodyValidation.parse(
+        request.body,
+      )
+
+      const userId = request.user.sub
 
       const checkInsCase = makeCheckInUseCase()
 

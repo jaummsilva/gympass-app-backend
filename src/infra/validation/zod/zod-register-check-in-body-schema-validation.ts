@@ -3,7 +3,6 @@ import { z } from 'zod'
 import type { Validation } from '@/core/validation/validation'
 
 const checkInBodySchema = z.object({
-  userId: z.string().uuid(),
   gymId: z.string().uuid(),
   userLatitude: z.number().refine((value) => {
     return Math.abs(value) <= 90
