@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie'
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastify, {
@@ -30,6 +31,10 @@ export class FastifyAdapter implements HttpServer {
       sign: {
         expiresIn: '1h',
       },
+    })
+
+    this.app.register(fastifyCookie, {
+      secret: env.JWT_SECRET,
     })
 
     this.app.listen(
@@ -84,8 +89,18 @@ export class FastifyAdapter implements HttpServer {
   }
 
   signJwt(sub: string) {
+    const tokenExpiresIn = '1h' // Tempo de expiração do token de acesso
+    const refreshTokenExpiresIn = '7d' // Tempo de expiração do refresh token
+
+    const token = this.app.jwt.sign({ sub }, { expiresIn: tokenExpiresIn })
+    const refreshToken = this.app.jwt.sign(
+      { sub },
+      { expiresIn: refreshTokenExpiresIn },
+    )
+
     return {
-      token: this.app.jwt.sign({ sub }),
+      token,
+      refreshToken,
     }
   }
 }

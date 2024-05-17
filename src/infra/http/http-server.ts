@@ -20,5 +20,5 @@ export interface HttpServer {
     verifyJwt?: boolean,
   ): void
   verifyJwt(request: HttpRequest): Promise<boolean>
-  signJwt(sub: string): { token: string }
+  signJwt(sub: string): { token: string; refreshToken: string }
 }
