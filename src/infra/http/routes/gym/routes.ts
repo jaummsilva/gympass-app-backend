@@ -12,6 +12,8 @@ export class GymRoutes {
 
   async init() {
     const isPrivateRoute = true
+    const isAdminRoute = true
+
     const zodGymRegisterBodySchemaValidation =
       new ZodGymRegisterBodySchemaValidation()
     const gymController = new GymController(
@@ -24,6 +26,7 @@ export class GymRoutes {
       '/gym',
       gymController.handle.bind(gymController),
       isPrivateRoute,
+      isAdminRoute,
     )
 
     const zodFetchGymBySearchNameQuerySchemaValidation =

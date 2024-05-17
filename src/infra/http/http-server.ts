@@ -18,7 +18,11 @@ export interface HttpServer {
       reply: HttpResponse,
     ) => Promise<HttpResponse | undefined>,
     verifyJwt?: boolean,
+    verifyRole?: boolean,
   ): void
   verifyJwt(request: HttpRequest): Promise<boolean>
-  signJwt(sub: string): { token: string; refreshToken: string }
+  signJwt(
+    sub: string,
+    role: 'ADMIN' | 'MEMBER',
+  ): { token: string; refreshToken: string }
 }

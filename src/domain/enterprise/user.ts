@@ -6,6 +6,7 @@ type UserProps = {
   email: string
   password_hash: string
   created_at?: Date
+  role: 'ADMIN' | 'MEMBER'
 }
 
 export class User extends Entity<UserProps> {
@@ -39,5 +40,9 @@ export class User extends Entity<UserProps> {
 
   get created_at() {
     return this.props.created_at
+  }
+
+  get role() {
+    return this.props.role
   }
 }

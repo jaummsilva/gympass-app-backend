@@ -11,6 +11,7 @@ export class PrismaUserMapper {
         password_hash: raw.password_hash,
         name: raw.name,
         created_at: raw.created_at,
+        role: raw.role,
       },
       new UniqueEntityID(raw.id),
     )
@@ -23,6 +24,7 @@ export class PrismaUserMapper {
       password_hash: user.password_hash,
       name: user.name,
       created_at: user.created_at ?? new Date(),
+      role: user.role,
     }
   }
 }

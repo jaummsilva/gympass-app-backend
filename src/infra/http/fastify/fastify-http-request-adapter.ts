@@ -21,7 +21,7 @@ export class FastifyHttpRequestAdapter implements HttpRequest {
     return this.req.params as { [key: string]: string }
   }
 
-  get user(): { sub: string } {
+  get user(): { sub: string; role: 'ADMIN' | 'MEMBER' } {
     return this.req.user
   }
 

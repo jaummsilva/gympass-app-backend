@@ -10,6 +10,8 @@ export class CheckInRoutes {
 
   async init() {
     const isPrivateRoute = true
+    const isAdminRoute = true
+
     const zodcheckInBodySchemaValidation = new ZodCheckInBodySchemaValidation()
     const checkInController = new CheckInController(
       this.httpServer,
@@ -35,6 +37,7 @@ export class CheckInRoutes {
       '/check-in/validate',
       validateCheckInController.handle.bind(validateCheckInController),
       isPrivateRoute,
+      isAdminRoute,
     )
   }
 }

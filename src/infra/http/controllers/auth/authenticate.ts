@@ -38,6 +38,7 @@ export class AuthenticateController {
 
         const { token, refreshToken } = this.httpServer.signJwt(
           user.id.toString(),
+          user.role,
         )
 
         return reply

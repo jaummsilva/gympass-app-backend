@@ -28,6 +28,10 @@ export class FastifyAdapter implements HttpServer {
 
     this.app.register(fastifyJwt, {
       secret: env.JWT_SECRET,
+      cookie: {
+        cookieName: 'refreshToken',
+        signed: false,
+      },
       sign: {
         expiresIn: '1h',
       },
@@ -58,6 +62,7 @@ export class FastifyAdapter implements HttpServer {
       reply: HttpResponse,
     ) => Promise<HttpResponse>,
     verifyJwt?: boolean,
+    verifyRole?: boolean,
   ) {
     this.app[method](
       url,
@@ -69,6 +74,14 @@ export class FastifyAdapter implements HttpServer {
           const isJwtValid = await this.verifyJwt(wrappedRequest)
 
           if (!isJwtValid) {
+            return wrappedResponse.status(401).json({ message: 'Unauthorized' })
+          }
+        }
+
+        if (verifyRole === true) {
+          const { role } = wrappedRequest.user
+
+          if (role !== 'ADMIN') {
             return wrappedResponse.status(401).json({ message: 'Unauthorized' })
           }
         }
@@ -88,13 +101,16 @@ export class FastifyAdapter implements HttpServer {
     return true
   }
 
-  signJwt(sub: string) {
+  signJwt(sub: string, role: 'ADMIN' | 'MEMBER') {
     const tokenExpiresIn = '1h' // Tempo de expiração do token de acesso
     const refreshTokenExpiresIn = '7d' // Tempo de expiração do refresh token
 
-    const token = this.app.jwt.sign({ sub }, { expiresIn: tokenExpiresIn })
+    const token = this.app.jwt.sign(
+      { sub, role },
+      { expiresIn: tokenExpiresIn },
+    )
     const refreshToken = this.app.jwt.sign(
-      { sub },
+      { sub, role },
       { expiresIn: refreshTokenExpiresIn },
     )
 

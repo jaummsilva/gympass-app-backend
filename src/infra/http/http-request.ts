@@ -8,6 +8,7 @@ export interface HttpRequest {
   }
   get user(): {
     sub: string
+    role: 'ADMIN' | 'MEMBER'
   }
   jwtVerify(): Promise<void>
 }
