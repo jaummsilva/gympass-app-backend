@@ -8,6 +8,7 @@ export class PrismaUsersRepository implements UsersRepository {
   async create(data: User) {
     const user = await prisma.user.create({
       data: {
+        role: data.role,
         email: data.email,
         name: data.name,
         password_hash: data.password_hash,

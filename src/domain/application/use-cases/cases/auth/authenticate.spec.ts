@@ -31,6 +31,7 @@ describe('Authenticate Use Case', () => {
         name: 'teste',
         email: 'teste@gmail.com',
         password_hash: await hashGenerator.hash('TESTE123'),
+        role:'ADMIN'
       }),
     )
 
@@ -61,6 +62,7 @@ describe('Authenticate Use Case', () => {
         name: 'teste',
         email: 'teste5@gmail.com',
         password_hash: await hashGenerator.hash('TESTE123'),
+        role: 'ADMIN'
       }),
     )
 

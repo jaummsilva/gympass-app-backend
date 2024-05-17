@@ -41,6 +41,7 @@ describe('Fecth User Check Ins History In Use Case', () => {
         name: 'teste',
         email: 'teste@gmail.com',
         password_hash: await hashGenerator.hash('TESTE123'),
+        role: 'ADMIN',
       }),
     )
     const userId = resultUser.id.toString()

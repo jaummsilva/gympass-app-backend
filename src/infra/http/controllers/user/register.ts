@@ -15,12 +15,15 @@ export class UserController {
       email: string
       password: string
       name: string
+      role: 'ADMIN' | 'MEMBER'
     }>,
   ) {}
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { name, email, password } = this.bodyValidation.parse(request.body)
+      const { name, email, password, role } = this.bodyValidation.parse(
+        request.body,
+      )
 
       const userRegisterUsersCase = makeRegisterUseCase()
 
@@ -28,6 +31,7 @@ export class UserController {
         name,
         email,
         password,
+        role,
       })
 
       if (result.isLeft()) {

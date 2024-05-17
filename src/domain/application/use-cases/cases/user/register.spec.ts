@@ -29,6 +29,7 @@ describe('User Register Use Case', () => {
       email: 'teste@gmail.com',
       password: 'TESTE123',
       name: 'João',
+      role: 'ADMIN',
     })
 
     if (result.isRight()) {
@@ -41,6 +42,7 @@ describe('User Register Use Case', () => {
       email: 'teste@gmail.com',
       password: 'TESTE123',
       name: 'João',
+      role: 'ADMIN',
     })
 
     if (result.isRight()) {
@@ -60,12 +62,14 @@ describe('User Register Use Case', () => {
       email: 'teste.10@gmail.com',
       password: 'TESTE123',
       name: 'João',
+      role: 'ADMIN',
     })
 
     const duplicateRegistrationResult = await userRegisterUseCase.execute({
       email: 'teste.10@gmail.com',
       password: 'TESTE123',
       name: 'João',
+      role: 'ADMIN',
     })
 
     expect(
