@@ -41,7 +41,12 @@ export class AuthenticateController {
         )
 
         return reply
-          .setCookie('refreshToken', refreshToken)
+          .setCookie('refreshToken', refreshToken, {
+            path: '/',
+            secure: true,
+            sameSite: true,
+            httpOnly: true,
+          })
           .status(200)
           .json({ token })
       }

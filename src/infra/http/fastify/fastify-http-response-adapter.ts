@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify'
 
-import { HttpResponse } from '../http-response' // Importe a interface HttpResponse aqui
+import { type CookieOptions, HttpResponse } from '../http-response' // Importe a interface HttpResponse aqui
 
 export class FastifyHttpResponseAdapter implements HttpResponse {
   private response: FastifyReply
@@ -24,9 +24,8 @@ export class FastifyHttpResponseAdapter implements HttpResponse {
     return this
   }
 
-  setCookie(name: string, value: string, options?: object): this {
+  setCookie(name: string, value: string, options?: CookieOptions): this {
     this.response.setCookie(name, value, options)
-
     return this
   }
 }
