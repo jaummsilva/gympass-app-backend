@@ -42,4 +42,28 @@ export class PrismaUsersRepository implements UsersRepository {
     }
     return PrismaUserMapper.toDomain(user)
   }
+
+  async findByEmailAndExcludeId(email: string, excludeId: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+        id: { not: excludeId },
+      },
+    })
+    return user ? PrismaUserMapper.toDomain(user) : null
+  }
+
+  async update(data: User) {
+    const user = await prisma.user.update({
+      where: {
+        id: data.id.toString(),
+      },
+      data: {
+        email: data.email,
+        name: data.name,
+        password_hash: data.password_hash,
+      },
+    })
+    return PrismaUserMapper.toDomain(user)
+  }
 }

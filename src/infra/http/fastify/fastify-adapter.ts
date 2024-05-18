@@ -37,9 +37,7 @@ export class FastifyAdapter implements HttpServer {
       },
     })
 
-    this.app.register(fastifyCookie, {
-      secret: env.JWT_SECRET,
-    })
+    this.app.register(fastifyCookie, {})
 
     this.app.listen(
       {

@@ -1,9 +1,11 @@
 import { ZodFetchUserCheckInsHistoryQuerySchemaValidation } from '@/infra/validation/zod/zod-fetch-user-check-ins-history-query-schema-validation.ts'
 import { ZodUserRegisterBodySchemaValidation } from '@/infra/validation/zod/zod-register-user-body-schema-validation'
+import { ZodUserUpdateBodySchemaValidation } from '@/infra/validation/zod/zod-update-user-body-schema-validation'
 
 import { FecthUserCheckInsHistoryController } from '../../controllers/user/fetch-user-check-ins-historys'
 import { GetUserCheckInTotalController } from '../../controllers/user/get-user-check-in-total'
 import { UserController } from '../../controllers/user/register'
+import { UserUpdateController } from '../../controllers/user/update-user'
 import type { HttpServer } from '../../http-server'
 
 export class UserRoutes {
@@ -22,6 +24,19 @@ export class UserRoutes {
       'post',
       '/user',
       userController.handle.bind(userController),
+    )
+
+    const zodUserUpdateBodySchemaValidation =
+      new ZodUserUpdateBodySchemaValidation()
+    const userUpdateController = new UserUpdateController(
+      this.httpServer,
+      zodUserUpdateBodySchemaValidation,
+    )
+
+    this.httpServer.register(
+      'put',
+      '/user',
+      userUpdateController.handle.bind(userUpdateController),
     )
 
     const zodFetchUserCheckInsHistoryQuerySchemaSchemaValidation =

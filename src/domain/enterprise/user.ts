@@ -45,4 +45,16 @@ export class User extends Entity<UserProps> {
   get role() {
     return this.props.role
   }
+
+  set email(email: string) {
+    this.props.email = email
+  }
+
+  set password_hash(password_hash: string) {
+    this.props.password_hash = password_hash
+  }
+
+  set name(name: string) {
+    this.props.name = name
+  }
 }
