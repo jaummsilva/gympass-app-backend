@@ -29,4 +29,28 @@ export class InMemoryUsersRepository implements UsersRepository {
 
     return user
   }
+
+  async findByEmailAndExcludeId(email: string, excludeId: string) {
+    const user = this.items.find(
+      (item) => item.email === email && excludeId !== item.id.toString(),
+    )
+
+    if (!user) {
+      return null
+    }
+
+    return user
+  }
+
+  async update(data: User): Promise<User> {
+    const index = this.items.findIndex(
+      (item) => item.id.toString() === data.id.toString(),
+    )
+
+    if (index !== -1) {
+      this.items[index] = data
+    }
+
+    return data
+  }
 }
