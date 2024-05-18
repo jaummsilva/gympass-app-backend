@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import type { Validation } from '@/core/validation/validation'
 
-const userUpdateBodySchema = z.object({
+const profileUpdateBodySchema = z.object({
   email: z.string().email(),
   password: z
     .string()
@@ -15,12 +15,12 @@ const userUpdateBodySchema = z.object({
   name: z.string(),
 })
 
-export type UserUpdateBodySchema = z.infer<typeof userUpdateBodySchema>
+export type ProfileUpdateBodySchema = z.infer<typeof profileUpdateBodySchema>
 
-export class ZodUserUpdateBodySchemaValidation
-  implements Validation<UserUpdateBodySchema>
+export class ZodProfileUpdateBodySchemaValidation
+  implements Validation<ProfileUpdateBodySchema>
 {
   parse(input: object | undefined) {
-    return userUpdateBodySchema.parse(input)
+    return profileUpdateBodySchema.parse(input)
   }
 }

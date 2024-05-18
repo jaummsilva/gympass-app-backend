@@ -6,12 +6,12 @@ import type { HashComparer } from '@/core/cryptography/hash-comparer'
 import type { HashGenerator } from '@/core/cryptography/hash-generator'
 
 import { UserAlreadyExistsError } from '../../errors/user/user-already-exists'
-import { UserRegisterUseCase } from './register'
-import { UserUpdateUseCase } from './update-user'
+import { UserRegisterUseCase } from '../user/register'
+import { ProfileUpdateUseCase } from './update-profile'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let userRegisterUseCase: UserRegisterUseCase
-let userUpdateUseCase: UserUpdateUseCase
+let profileUpdateUseCase: ProfileUpdateUseCase
 let hashComparer: HashComparer
 let hashGenerator: HashGenerator
 
@@ -25,7 +25,7 @@ describe('User Update Use Case', () => {
       hashGenerator,
     )
 
-    userUpdateUseCase = new UserUpdateUseCase(
+    profileUpdateUseCase = new ProfileUpdateUseCase(
       inMemoryUsersRepository,
       hashGenerator,
     )
@@ -42,7 +42,7 @@ describe('User Update Use Case', () => {
     if (result.isRight()) {
       const userId = result.value.user.id.toString()
 
-      const resultUpdate = await userUpdateUseCase.execute({
+      const resultUpdate = await profileUpdateUseCase.execute({
         email: 'teste@gmail.com',
         name: 'Teste 2',
         userId,
@@ -67,7 +67,7 @@ describe('User Update Use Case', () => {
     if (result.isRight()) {
       const userId = result.value.user.id.toString()
 
-      const resultUpdate = await userUpdateUseCase.execute({
+      const resultUpdate = await profileUpdateUseCase.execute({
         email: 'teste@gmail.com',
         name: 'Teste 2',
         userId,
@@ -105,7 +105,7 @@ describe('User Update Use Case', () => {
     if (result.isRight()) {
       const userId = result.value.user.id.toString()
 
-      const duplicateUpdateResult = await userUpdateUseCase.execute({
+      const duplicateUpdateResult = await profileUpdateUseCase.execute({
         email: 'differentEmail@gmail.com',
         name: 'Teste 2',
         userId,

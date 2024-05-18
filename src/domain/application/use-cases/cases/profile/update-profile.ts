@@ -6,19 +6,19 @@ import { User } from '@/domain/enterprise/user'
 import { UserAlreadyExistsError } from '../../errors/user/user-already-exists'
 import { UserNotExistsError } from '../../errors/user/user-not-exists'
 
-interface UserUpdateUseCaseRequest {
+interface ProfileUpdateUseCaseRequest {
   userId: string
   name: string
   password?: string
   email: string
 }
 
-type UserUpdateUseCaseResponse = Either<
+type ProfileUpdateUseCaseResponse = Either<
   UserAlreadyExistsError | UserNotExistsError,
   { updatedUser: User }
 >
 
-export class UserUpdateUseCase {
+export class ProfileUpdateUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private hashGenerator: HashGenerator,
@@ -29,7 +29,7 @@ export class UserUpdateUseCase {
     name,
     password,
     email,
-  }: UserUpdateUseCaseRequest): Promise<UserUpdateUseCaseResponse> {
+  }: ProfileUpdateUseCaseRequest): Promise<ProfileUpdateUseCaseResponse> {
     let passwordHash
     const user = await this.usersRepository.findById(userId)
 

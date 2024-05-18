@@ -7,9 +7,9 @@ import { UserNotExistsError } from '@/domain/application/use-cases/errors/user/u
 import type { HttpRequest } from '../../http-request'
 import type { HttpResponse } from '../../http-response'
 import type { HttpServer } from '../../http-server'
-import { makeUserUpdateUseCase } from './factories/make-user-update-use-case'
+import { makeProfileUpdateUseCase } from './factories/make-update-profile-use-case'
 
-export class UserUpdateController {
+export class ProfileUpdateController {
   constructor(
     private httpServer: HttpServer,
     private bodyValidation: Validation<{
@@ -23,9 +23,9 @@ export class UserUpdateController {
     try {
       const { name, email, password } = this.bodyValidation.parse(request.body)
 
-      const userUpdateUsersCase = makeUserUpdateUseCase()
+      const profileUpdateUsersCase = makeProfileUpdateUseCase()
 
-      const result = await userUpdateUsersCase.execute({
+      const result = await profileUpdateUsersCase.execute({
         userId: request.user.sub,
         name,
         email,

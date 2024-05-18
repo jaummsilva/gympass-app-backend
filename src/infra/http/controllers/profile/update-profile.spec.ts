@@ -22,7 +22,7 @@ describe('Update (e2e)', () => {
     const token = await createAndAuthenticateUser(app)
 
     const responseUpdate = await request(app.instance.server)
-      .put('/user')
+      .put('/profile')
       .set('Authorization', `Bearer ${token}`)
       .send({
         name: 'TESTE USER',
