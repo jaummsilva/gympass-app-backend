@@ -1,5 +1,6 @@
 import type {
   FindManyNearbyParams,
+  FindManyParams,
   GymsRepository,
 } from '@/domain/application/repositories/gyms-repository'
 import type { Gym } from '@/domain/enterprise/gym'
@@ -81,6 +82,35 @@ export class PrismaGymsRepository implements GymsRepository {
           },
         ],
       },
+    })
+
+    return gyms.map((gym) => PrismaGymMapper.toDomain(gym))
+  }
+
+  async findMany(params: FindManyParams) {
+    const { title = '', id = '', page = 1 } = params
+
+    const skip = (page - 1) * 20
+    const take = 20
+
+    const gyms = await prisma.gym.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: title,
+              mode: 'insensitive',
+            },
+          },
+          {
+            id: {
+              contains: id,
+            },
+          },
+        ],
+      },
+      skip,
+      take,
     })
 
     return gyms.map((gym) => PrismaGymMapper.toDomain(gym))

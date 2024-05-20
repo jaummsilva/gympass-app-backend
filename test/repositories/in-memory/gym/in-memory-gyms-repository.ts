@@ -1,5 +1,6 @@
 import type {
   FindManyNearbyParams,
+  FindManyParams,
   GymsRepository,
 } from '@/domain/application/repositories/gyms-repository'
 import { getDistanceBetweenCoordinates } from '@/domain/application/utils/get-distance-between-coordinates'
@@ -48,6 +49,22 @@ export class InMemoryGymsRepository implements GymsRepository {
 
       return distance < 10
     })
+
+    if (gyms.length === 0) {
+      return null
+    }
+
+    return gyms
+  }
+
+  async findMany(params: FindManyParams) {
+    const { title = '', id = '', page = 1 } = params
+
+    const gyms = this.items
+      .filter(
+        (item) => item.title.includes(title) || item.id.toString().includes(id),
+      )
+      .slice((page - 1) * 20, page * 20)
 
     if (gyms.length === 0) {
       return null
