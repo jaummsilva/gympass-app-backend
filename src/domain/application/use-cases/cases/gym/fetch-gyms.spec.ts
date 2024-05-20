@@ -76,6 +76,6 @@ describe('Fetch Nearby Gyms Use Case', () => {
       page: 2,
     })
 
-    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight() && result.value.gyms.length).toBe(0)
   })
 })

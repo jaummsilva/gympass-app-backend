@@ -5,7 +5,11 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Gym as DomainGym } from '@/domain/enterprise/gym'
 
 export class PrismaGymMapper {
-  static toDomain(raw: PrismaGym): DomainGym {
+  static toDomain(
+    raw: PrismaGym & {
+      totalCheckIns?: number
+    },
+  ): DomainGym {
     return DomainGym.create(
       {
         latitude: PrismaGymMapper.toNumber(raw.latitude),
@@ -13,6 +17,7 @@ export class PrismaGymMapper {
         phone: raw.phone,
         title: raw.title,
         description: raw.description ?? null,
+        totalCheckIns: raw.totalCheckIns ?? 0,
       },
       new UniqueEntityID(raw.id),
     )

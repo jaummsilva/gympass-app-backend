@@ -4,7 +4,6 @@ import type { Validation } from '@/core/validation/validation'
 
 // Defina o esquema de validação
 const fetchGymsQuerySchema = z.object({
-  id: z.string().optional(),
   title: z.string().optional(),
   page: z.coerce.number().min(1).default(1),
 })

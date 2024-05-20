@@ -1,14 +1,7 @@
 import type { Gym } from '@/domain/enterprise/gym'
 
 export class GymPresenter {
-  static toHttp(gym: Gym): {
-    id: string
-    title: string
-    description?: string | null
-    phone: string
-    latitude: number
-    longitude: number
-  } {
+  static toHttp(gym: Gym) {
     return {
       id: gym.id.toString(),
       latitude: gym.latitude,
@@ -16,6 +9,7 @@ export class GymPresenter {
       phone: gym.phone,
       description: gym.description ?? null,
       title: gym.title,
+      totalCheckIns: gym.totalCheckIns ?? 0,
     }
   }
 }

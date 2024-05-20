@@ -3,6 +3,7 @@ import type {
   FindManyParams,
   GymsRepository,
 } from '@/domain/application/repositories/gyms-repository'
+import type { MetaResponse } from '@/domain/application/utils/meta-response'
 import type { Gym } from '@/domain/enterprise/gym'
 import { prisma } from '@/infra/database/prisma/prisma'
 
@@ -88,31 +89,55 @@ export class PrismaGymsRepository implements GymsRepository {
   }
 
   async findMany(params: FindManyParams) {
-    const { title = '', id = '', page = 1 } = params
+    const { title = '', page = 1 } = params
 
     const skip = (page - 1) * 20
     const take = 20
 
-    const gyms = await prisma.gym.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: title,
-              mode: 'insensitive',
+    const [gyms, totalCount] = await Promise.all([
+      prisma.gym.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: title,
+                mode: 'insensitive',
+              },
             },
-          },
-          {
-            id: {
-              contains: id,
+          ],
+        },
+        skip,
+        take,
+        include: {
+          checkIns: true,
+        },
+      }),
+      prisma.gym.count({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: title,
+                mode: 'insensitive',
+              },
             },
-          },
-        ],
-      },
-      skip,
-      take,
-    })
+          ],
+        },
+      }),
+    ])
 
-    return gyms.map((gym) => PrismaGymMapper.toDomain(gym))
+    const meta: MetaResponse = {
+      pageIndex: page || 1,
+      perPage: 20,
+      totalCount,
+    }
+
+    const gymsMapped = gyms.map((gym) =>
+      PrismaGymMapper.toDomain({
+        ...gym,
+        totalCheckIns: gym.checkIns.length,
+      }),
+    )
+    return { gyms: gymsMapped, meta }
   }
 }

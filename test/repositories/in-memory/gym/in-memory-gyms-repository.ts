@@ -4,6 +4,7 @@ import type {
   GymsRepository,
 } from '@/domain/application/repositories/gyms-repository'
 import { getDistanceBetweenCoordinates } from '@/domain/application/utils/get-distance-between-coordinates'
+import type { MetaResponse } from '@/domain/application/utils/meta-response'
 import type { Gym } from '@/domain/enterprise/gym'
 
 export class InMemoryGymsRepository implements GymsRepository {
@@ -58,18 +59,19 @@ export class InMemoryGymsRepository implements GymsRepository {
   }
 
   async findMany(params: FindManyParams) {
-    const { title = '', id = '', page = 1 } = params
+    const { title = '', page = 1 } = params
 
-    const gyms = this.items
-      .filter(
-        (item) => item.title.includes(title) || item.id.toString().includes(id),
-      )
-      .slice((page - 1) * 20, page * 20)
+    const filteredGyms = this.items.filter((item) => item.title.includes(title))
 
-    if (gyms.length === 0) {
-      return null
+    const totalCount = filteredGyms.length
+    const gyms = filteredGyms.slice((page - 1) * 20, page * 20)
+
+    const meta: MetaResponse = {
+      pageIndex: page,
+      perPage: 20, // Ajuste conforme necessário
+      totalCount,
     }
 
-    return gyms
+    return { gyms, meta }
   }
 }

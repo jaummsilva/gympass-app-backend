@@ -12,7 +12,6 @@ export class FecthGymsController {
   constructor(
     private httpServer: HttpServer,
     private bodyValidation: Validation<{
-      id?: string
       title?: string
       page?: number
     }>,
@@ -20,19 +19,20 @@ export class FecthGymsController {
 
   async handle(request: HttpRequest, reply: HttpResponse) {
     try {
-      const { id, title, page } = this.bodyValidation.parse(request.query)
+      const { title, page } = this.bodyValidation.parse(request.query)
 
       const fecthGymsCase = makeFetchGymsUseCase()
 
-      const result = await fecthGymsCase.execute({ id, title, page })
+      const result = await fecthGymsCase.execute({ title, page })
 
       if (result.isRight()) {
-        const { gyms } = result.value
+        const { gyms, meta } = result.value
 
         return reply.status(200).json({
           gyms: gyms.map((checkIn) => ({
             ...GymPresenter.toHttp(checkIn),
           })),
+          meta,
         })
       }
     } catch (error) {

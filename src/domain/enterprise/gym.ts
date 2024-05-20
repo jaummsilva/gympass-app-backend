@@ -7,6 +7,7 @@ type GymProps = {
   phone: string
   latitude: number
   longitude: number
+  totalCheckIns: number
 }
 
 export class Gym extends Entity<GymProps> {
@@ -36,5 +37,9 @@ export class Gym extends Entity<GymProps> {
 
   get longitude() {
     return this.props.longitude
+  }
+
+  get totalCheckIns() {
+    return this.props.totalCheckIns
   }
 }

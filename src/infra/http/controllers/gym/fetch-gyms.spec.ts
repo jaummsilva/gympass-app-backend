@@ -36,7 +36,7 @@ describe('Fetch gyms (e2e)', () => {
 
     const gym = await prisma.gym.findFirst({
       select: {
-        id: true,
+        title: true,
       },
     })
 
@@ -44,7 +44,7 @@ describe('Fetch gyms (e2e)', () => {
       .get('/gym')
       .set('Authorization', `Bearer ${token}`)
       .query({
-        id: gym?.id,
+        title: gym?.title,
       })
 
     const responseBody: {
